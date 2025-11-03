@@ -1,0 +1,13 @@
+{
+  "routes": [
+    {
+      "src": "/careers/(.*)",
+      "dest": "/careers/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
+
