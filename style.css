@@ -5662,3 +5662,435 @@ footer {
 
 
 
+
+
+
+
+/* ==================== MOBILE FORM & PREVIEW FIX ==================== */
+
+@media (max-width: 768px) {
+    /* Generator container ko vertical stack karo */
+    .generator-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    /* Form section ko full width do */
+    .form-section {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        order: 1;
+    }
+    
+    /* Preview section ko full width do aur neeche le jao */
+    .preview-section {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        order: 2;
+        position: relative !important;
+        top: auto !important;
+    }
+    
+    /* Invoice preview ko chota karo mobile ke liye */
+    .invoice-preview {
+        min-height: 300px !important;
+        max-height: 400px !important;
+        overflow-y: auto !important;
+        padding: 15px !important;
+        font-size: 12px !important;
+    }
+    
+    /* Voice controls ko adjust karo */
+    .voice-controls {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .voice-btn {
+        font-size: 11px !important;
+        padding: 8px 4px !important;
+        min-height: 50px !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Form elements ko adjust karo */
+    .form-group input, 
+    .form-group textarea, 
+    .form-group select {
+        font-size: 14px !important;
+        padding: 10px !important;
+    }
+    
+    /* Tabs ko adjust karo */
+    .form-tabs {
+        flex-wrap: wrap !important;
+        gap: 5px !important;
+    }
+    
+    .tab-btn {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+        flex: 1;
+        min-width: 100px;
+    }
+    
+    /* Action buttons ko stack karo */
+    .form-actions {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .form-actions .btn {
+        width: 100% !important;
+        margin: 2px 0 !important;
+    }
+    
+    /* Preview actions ko bhi stack karo */
+    .preview-actions {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .preview-actions .btn {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Chote screens ke liye aur optimize karo */
+    .voice-controls {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .voice-btn {
+        font-size: 10px !important;
+        min-height: 45px !important;
+    }
+    
+    .invoice-preview {
+        min-height: 250px !important;
+        max-height: 350px !important;
+    }
+    
+    /* Hero section ko adjust karo */
+    .hero-text h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .hero-text p {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Viewport fix - zoom prevent karo */
+@media (max-width: 768px) {
+    html, body {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+    
+    .container {
+        max-width: 100% !important;
+        padding: 0 10px !important;
+    }
+    
+    /* Input fields pe zoom prevent karo */
+    input, select, textarea {
+        font-size: 16px !important;
+        max-width: 100% !important;
+    }
+}
+
+
+
+
+
+
+
+
+/* ==================== ALTERNATIVE PREVIEW FIX ==================== */
+
+@media (max-width: 768px) {
+    .preview-section {
+        height: auto !important;
+        min-height: 400px !important;
+    }
+    
+    .invoice-preview {
+        height: 300px !important;
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 10px !important;
+    }
+    
+    /* Force full content display with scaling */
+    .invoice-template {
+        width: 100% !important;
+        min-height: 280px !important;
+        transform: none !important;
+    }
+    
+    /* Make everything smaller but visible */
+    .invoice-template * {
+        font-size: 11px !important;
+        line-height: 1.2 !important;
+    }
+    
+    .invoice-title {
+        font-size: 14px !important;
+    }
+    
+    .invoice-items th,
+    .invoice-items td {
+        padding: 4px 2px !important;
+        font-size: 10px !important;
+    }
+}
+
+/* Emergency fix - agar phir bhi na ho */
+@media (max-width: 768px) {
+    .generator-container {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .preview-section {
+        order: 2 !important;
+        margin-top: 20px !important;
+    }
+    
+    .invoice-preview {
+        height: 350px !important;
+        overflow: auto !important;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==================== ULTIMATE PREVIEW FIX ==================== */
+
+@media (max-width: 768px) {
+    .preview-section {
+        height: 300px !important;
+        padding: 8px !important;
+    }
+    
+    .invoice-preview {
+        height: 260px !important;
+        overflow: hidden !important;
+        padding: 5px !important;
+        position: relative !important;
+    }
+    
+    .invoice-template {
+        transform: scale(0.55) !important;
+        transform-origin: top center !important;
+        width: 180% !important;
+        margin-left: -40% !important;
+    }
+    
+    /* Font sizes extremely small but readable */
+    .invoice-template * {
+        font-size: 9px !important;
+        line-height: 1.1 !important;
+    }
+    
+    .invoice-title {
+        font-size: 12px !important;
+    }
+    
+    .invoice-header {
+        margin-bottom: 5px !important;
+    }
+    
+    .invoice-addresses {
+        margin-bottom: 5px !important;
+        gap: 5px !important;
+    }
+    
+    .invoice-items {
+        margin-bottom: 5px !important;
+    }
+    
+    .invoice-items th,
+    .invoice-items td {
+        padding: 2px 1px !important;
+        font-size: 7px !important;
+    }
+    
+    .invoice-footer {
+        margin-top: 5px !important;
+        font-size: 7px !important;
+    }
+}
+
+
+
+
+
+/* Careers Section Styling */
+.careers-section {
+    background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.careers-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><polygon fill="%2300f7ff" points="0,1000 1000,0 1000,1000"/></svg>');
+    background-size: cover;
+}
+
+.careers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 50px 0;
+}
+
+.career-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 247, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.career-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.career-card:hover::before {
+    left: 100%;
+}
+
+.career-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 15px 30px rgba(0, 247, 255, 0.2);
+}
+
+.career-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.career-card h3 {
+    color: var(--light);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.career-card p {
+    color: var(--light);
+    opacity: 0.8;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.job-id {
+    background: rgba(0, 247, 255, 0.1);
+    color: var(--primary);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: inline-block;
+    border: 1px solid rgba(0, 247, 255, 0.3);
+}
+
+.careers-cta {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    margin-top: 50px;
+    border: 1px solid rgba(0, 247, 255, 0.2);
+}
+
+.careers-cta h3 {
+    color: var(--light);
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--light);
+    font-size: 1rem;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+    background: rgba(0, 247, 255, 0.1);
+    transform: translateX(10px);
+}
+
+.benefit-item i {
+    color: var(--primary);
+    font-size: 1.2rem;
+    width: 25px;
+}
+
+.cta-action {
+    margin-top: 30px;
+}
+
+.cta-action p {
+    color: var(--gray);
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.btn-large {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+}

@@ -782,53 +782,82 @@ function processGeneralVoiceCommand(transcript) {
         return;
     }
     
-    // Item/Product Name - Main voice se
-    if (lowerTranscript.startsWith('item ') || lowerTranscript.startsWith('product ') || lowerTranscript.startsWith('आइटम ') || lowerTranscript.startsWith('प्रोडक्ट ')) {
-        
-        console.log("🎯 Main voice item command:", transcript);
-        
-        let itemName = transcript;
-        
-        // "item " remove karo
-        if (lowerTranscript.startsWith('item ')) {
-            itemName = transcript.substring(5);
-        }
-        // "product " remove karo  
-        else if (lowerTranscript.startsWith('product ')) {
-            itemName = transcript.substring(8);
-        }
-        // "आइटम " remove karo
-        else if (lowerTranscript.startsWith('आइटम ')) {
-            itemName = transcript.substring(5);
-        }
-        // "प्रोडक्ट " remove karo
-        else if (lowerTranscript.startsWith('प्रोडक्ट ')) {
-            itemName = transcript.substring(8);
-        }
-        
-        itemName = itemName.trim();
-        console.log("🧹 Cleaned item name:", itemName);
-        
-        if (itemName && itemName.length > 1) {
-            addItemRow();
-            setTimeout(() => {
-                const rows = document.querySelectorAll('.item-row');
-                const lastRow = rows[rows.length - 1];
-                const nameInput = lastRow.querySelector('.item-desc');
-                if (nameInput) {
-                    nameInput.value = itemName;
-                    updateInvoicePreview();
-                    document.getElementById('voiceStatus').textContent = `✅ Item set: ${itemName}`;
-                    speakText(`Item set ${itemName}`);
-                }
-            }, 500);
-        }
-        return;
+   // Item/Product Name - Main voice se
+if (lowerTranscript.startsWith('item ') || lowerTranscript.startsWith('product ') || lowerTranscript.startsWith('आइटम ') || lowerTranscript.startsWith('प्रोडक्ट ')) {
+    
+    console.log("🎯 Main voice item command:", transcript);
+    
+    let itemName = transcript;
+    
+    // "item " remove karo
+    if (lowerTranscript.startsWith('item ')) {
+        itemName = transcript.substring(5);
+    }
+    // "product " remove karo  
+    else if (lowerTranscript.startsWith('product ')) {
+        itemName = transcript.substring(8);
+    }
+    // "आइटम " remove karo
+    else if (lowerTranscript.startsWith('आइटम ')) {
+        itemName = transcript.substring(5);
+    }
+    // "प्रोडक्ट " remove karo
+    else if (lowerTranscript.startsWith('प्रोडक्ट ')) {
+        itemName = transcript.substring(8);
     }
     
-    // If no command matched
-    document.getElementById('voiceStatus').textContent = "❌ Command not recognized. Try: 'Business Name', 'Quantity', 'Price', 'Discount', etc.";
-    speakText("Command not recognized");
+    itemName = itemName.trim();
+    console.log("🧹 Cleaned item name:", itemName);
+    
+    if (itemName && itemName.length > 1) {
+        addItemRow();
+        setTimeout(() => {
+            const rows = document.querySelectorAll('.item-row');
+            const lastRow = rows[rows.length - 1];
+            const nameInput = lastRow.querySelector('.item-desc');
+            if (nameInput) {
+                nameInput.value = itemName;
+                updateInvoicePreview();
+                document.getElementById('voiceStatus').textContent = `✅ Item set: ${itemName}`;
+                speakText(`Item set ${itemName}`);
+            }
+        }, 500);
+    }
+    return;
+}
+
+// SMART ITEM DETECTION - pehle check karo (yeh if statement ke pehle add karo)
+const smartItem = parseSmartItemCommand(lowerTranscript);
+if (smartItem.success) {
+    console.log("🎯 Smart item detected:", smartItem);
+    addItemRow();
+    setTimeout(() => {
+        const rows = document.querySelectorAll('.item-row');
+        const lastRow = rows[rows.length - 1];
+        const nameInput = lastRow.querySelector('.item-desc');
+        const qtyInput = lastRow.querySelector('.item-qty');
+        const priceInput = lastRow.querySelector('.item-price');
+        
+        if (nameInput && qtyInput && priceInput) {
+            nameInput.value = smartItem.name;
+            qtyInput.value = smartItem.quantity;
+            priceInput.value = smartItem.price; // Yeh price per unit hoga
+            
+            // Trigger calculation
+            const event = new Event('input', { bubbles: true });
+            priceInput.dispatchEvent(event);
+            
+            updateInvoicePreview();
+            document.getElementById('voiceStatus').textContent = `✅ Added: ${smartItem.quantity} ${smartItem.unit} ${smartItem.name} @ ₹${smartItem.price}`;
+            speakText(`Added ${smartItem.name}`);
+        }
+    }, 500);
+    return;
+}
+
+// If no command matched
+document.getElementById('voiceStatus').textContent = "❌ Command not recognized. Try: 'Business Name', 'Quantity', 'Price', 'Discount', etc.";
+speakText("Command not recognized");
 }
 
 // Extract number from text - IMPROVED
@@ -860,16 +889,18 @@ function extractNumberFromText(text) {
     return null;
 }
 
-// SMART ITEM PARSER - Kirana dukan ke liye
+// SMART ITEM PARSER - Fixed version
 function parseSmartItemCommand(transcript) {
     console.log("🔍 Smart parsing:", transcript);
+    
+    const lowerTranscript = transcript.toLowerCase();
     
     // Numbers extract karo
     let numbers = transcript.match(/\d+/g);
     if (!numbers || numbers.length < 2) return { success: false };
     
     let quantity = parseInt(numbers[0]);
-    let price = parseInt(numbers[numbers.length - 1]);
+    let pricePerUnit = parseInt(numbers[numbers.length - 1]); // Yeh rate hai, total nahi
     
     // Units detect karo
     let unit = 'piece'; // default
@@ -908,41 +939,65 @@ function parseSmartItemCommand(transcript) {
         priceUnit = 'litre';
     }
     
-    // Smart calculation
-    let finalPrice = price;
+    // IMPORTANT FIX: Price calculation
+    let finalPrice = pricePerUnit; // Direct price use karo
     
-    // Unit conversion
+    // Sirf specific cases mein multiply karo
     if (unit === 'gram' && priceUnit === 'kilo') {
-        finalPrice = (quantity / 1000) * price;
-    }
-    else if (unit === 'gram' && priceUnit === 'gram') {
-        finalPrice = quantity * price;
-    }
-    else if (unit === 'dozen' && priceUnit === 'dozen') {
-        finalPrice = quantity * price;
+        // Gram quantity hai aur kilo ka rate hai
+        finalPrice = (quantity / 1000) * pricePerUnit;
     }
     else if (unit === 'piece' && priceUnit === 'dozen') {
-        finalPrice = quantity * (price / 12);
+        // Piece quantity hai aur dozen ka rate hai
+        finalPrice = (quantity / 12) * pricePerUnit;
     }
     else {
-        finalPrice = quantity * price; // default
+        // Sab cases mein pricePerUnit hi use karo (rate hai ye)
+        finalPrice = pricePerUnit;
     }
     
-    // Item name extract karo - Tumhari puri list ke saath
+    // Item name extract karo - Improved
     let itemText = transcript
         .replace(/\d+/g, '')
-        .replace(/(packet|pack|kg|kgs|kilo|kilogram|gram|grams|bora|bag|litre|liter|metre|meter|bundle|piece|pieces|pcs|unit|item|items|product|saman|maal|ka|ke|ki|kaa|kī|kē|kā|kaun|bhav|bhaw|bhaav|daam|dam|rate|cost|price|mooly|keemat|moolya|माल|सामान|पीस|किलो|ग्राम|पैकेट|बोरा|बंडल|थैला|लिटर|मीटर|का|की|के|का भाव|कीमत|भाव|भव|दाम|रेट|मूल्य|रुपये|रुपया|की दर|का रेट|का दाम|का मूल्य|लीटर)/gi, '')
+        .replace(/(packet|pack|kg|kgs|kilo|kilogram|gram|grams|bora|bag|litre|liter|metre|meter|bundle|piece|pieces|pcs|unit|item|items|product|saman|maal|ka|ke|ki|kaa|kī|kē|kā|kaun|bhav|bhaw|bhaav|daam|dam|rate|cost|price|mooly|keemat|moolya|rupee|rupees|rs|rp|रुपये|रुपया|माल|सामान|पीस|किलो|ग्राम|पैकेट|बोरा|बंडल|थैला|लिटर|मीटर|का|की|के|का भाव|कीमत|भाव|भव|दाम|रेट|मूल्य|की दर|का रेट|का दाम|का मूल्य|लीटर)/gi, '')
         .replace(/\s+/g, ' ')
         .trim();
+
+    // Special cases for item names
+    if (lowerTranscript.includes('kaju') || lowerTranscript.includes('काजू')) {
+        itemText = 'Kaju';
+    }
+    if (lowerTranscript.includes('kalaimirch') || lowerTranscript.includes('kalimirch') || lowerTranscript.includes('कालामिर्च')) {
+        itemText = 'Kali Mirch';
+    }
+    if (lowerTranscript.includes('mirch') && !lowerTranscript.includes('kali')) {
+        itemText = 'Mirch';
+    }
+    if (lowerTranscript.includes('tamatar') || lowerTranscript.includes('tomato')) {
+        itemText = 'Tomato';
+    }
+    if (lowerTranscript.includes('pyaz') || lowerTranscript.includes('onion')) {
+        itemText = 'Pyaz';
+    }
+    if (lowerTranscript.includes('alu') || lowerTranscript.includes('potato')) {
+        itemText = 'Alu';
+    }
     
-    console.log("✅ SMART PARSED:", itemText, "Qty:", quantity, "Rate:", finalPrice);
+    console.log("✅ FIXED SMART PARSED:", {
+        name: itemText, 
+        quantity: quantity, 
+        price: finalPrice,
+        unit: unit,
+        priceUnit: priceUnit
+    });
     
-    if (itemText && quantity && finalPrice) {
+    if (itemText && itemText.length > 1 && quantity && finalPrice) {
         return { 
             success: true, 
             name: itemText, 
             quantity: quantity, 
-            price: finalPrice 
+            price: finalPrice,
+            unit: unit
         };
     }
     
@@ -1078,14 +1133,7 @@ function setupEventListeners() {
     });
 }
 
-// Mobile menu functions
-function toggleMobileMenu() {
-    document.getElementById('mobileMenu').classList.toggle('active');
-}
 
-function closeMobileMenu() {
-    document.getElementById('mobileMenu').classList.remove('active');
-}
 
 // Setup modal controls
 function setupModalControls() {
@@ -6302,20 +6350,6 @@ function exportInvoiceData() {
     // Add your export logic here
 }
 
-// Mobile Menu Functions
-function openMobileMenu() {
-    document.getElementById('mobileMenu').classList.add('active');
-    document.getElementById('mobileMenuOverlay').classList.add('active');
-}
-
-function closeMobileMenu() {
-    document.getElementById('mobileMenu').classList.remove('active');
-    document.getElementById('mobileMenuOverlay').classList.remove('active');
-}
-
-// Event Listeners
-document.getElementById('mobileMenuToggle').addEventListener('click', openMobileMenu);
-document.getElementById('mobileMenuClose').addEventListener('click', closeMobileMenu);
 
 // Update Mobile Cart Count
 function updateMobileCartCount() {
@@ -6843,3 +6877,234 @@ window.speakLastMessage = function() {
 };
 
 console.log('🚀 BillNeXX SMART AI Loaded Successfully!');
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ==================== MOBILE MENU FIX - FINAL WORKING VERSION ====================
+
+// Mobile Menu Functions
+function setupMobileMenu() {
+    console.log('🔄 Setting up Mobile Menu...');
+    
+    // Get ALL possible mobile menu elements
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    
+    console.log('📱 Mobile Menu Elements Found:', {
+        toggle: mobileMenuToggle,
+        menu: mobileMenu,
+        close: mobileMenuClose,
+        overlay: mobileMenuOverlay
+    });
+
+    // ✅ Mobile Menu Toggle Functionality
+    if (mobileMenuToggle && mobileMenu && mobileMenuOverlay) {
+        mobileMenuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            mobileMenu.classList.toggle('active');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            
+            console.log('📱 Mobile Menu:', mobileMenu.classList.contains('active') ? 'OPENED' : 'CLOSED');
+        });
+        console.log('✅ Mobile menu toggle event added');
+    } else {
+        console.error('❌ Mobile menu elements missing');
+    }
+
+    // ✅ Close Menu Functions
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeMobileMenu();
+        });
+    }
+
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+    }
+
+    // ✅ Close menu when clicking on mobile nav links (EXCEPT buttons)
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link:not(button)');
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+    });
+
+    console.log('✅ Mobile Menu setup complete');
+}
+
+// Close Mobile Menu Function (Universal)
+function closeMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    
+    if (mobileMenu) mobileMenu.classList.remove('active');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+    console.log('📱 Mobile Menu CLOSED');
+}
+
+// Initialize Mobile Menu
+function initMobileMenu() {
+    console.log('🚀 Initializing Mobile Menu System');
+    // Delay thoda sa for DOM to fully load
+    setTimeout(() => {
+        setupMobileMenu();
+    }, 1000);
+}
+
+// Add to DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    initMobileMenu();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ==================== SIMPLE FIX ====================
+
+// Override the openSignupModal function
+function openSignupModal() {
+    console.log('🔄 openSignupModal called');
+    
+    // Direct triple-login.html open karo
+    if (typeof openSignupPage === 'function') {
+        openSignupPage();
+    } else {
+        // Fallback
+        window.open('triple-login.html', '_blank', 'width=500,height=700');
+    }
+    
+    // Mobile menu close karo
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    if (mobileMenu) mobileMenu.classList.remove('active');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Override the showCartSidebar function bhi check karo
+function showCartSidebar() {
+    console.log('🔄 showCartSidebar called');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartOverlay = document.getElementById('cartOverlay');
+    
+    if (cartSidebar && cartOverlay) {
+        cartSidebar.style.right = '0';
+        cartOverlay.style.display = 'block';
+    }
+    
+    // Mobile menu close karo
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    if (mobileMenu) mobileMenu.classList.remove('active');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+
+
+
+
+
+
+
+
+// ==================== EMERGENCY FIX FOR BUTTONS ====================
+
+function emergencyFixButtons() {
+    console.log('🚨 Applying emergency button fixes...');
+    
+    // Next Button Fix
+    const nextBtn = document.getElementById('nextTabBtn');
+    if (nextBtn) {
+        nextBtn.onclick = nextTab;
+        console.log('✅ Next button fixed');
+    }
+    
+    // GST Toggle Fix
+    const gstToggle = document.getElementById('gstToggle');
+    if (gstToggle) {
+        gstToggle.onchange = function() {
+            updateInvoicePreview();
+            const gstStatus = document.getElementById('gstStatus');
+            const gstModeText = document.getElementById('gstModeText');
+            if (gstStatus) gstStatus.textContent = this.checked ? 'ON' : 'OFF';
+            if (gstModeText) gstModeText.textContent = this.checked ? 'ON (GST bills)' : 'OFF (Simple bills)';
+        };
+        console.log('✅ GST toggle fixed');
+    }
+}
+
+// Run emergency fix
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(emergencyFixButtons, 2000);
+});
+
+
+// ==================== SIGNUP FIX ====================
+// Override existing functions to open in same tab
+
+// Fix for desktop signup
+function openSignupPage() {
+    window.location.href = 'triple-login.html';
+    return false;
+}
+
+// Fix for mobile signup  
+function openSignupModal() {
+    window.location.href = 'triple-login.html';
+    return false;
+}
+
+// Force same tab behavior
+window.open = function(url, name, features) {
+    if (url === 'triple-login.html') {
+        window.location.href = url;
+        return null;
+    }
+    // Original open function for other cases
+    return originalOpen(url, name, features);
+};
+
+// Save original open function
+var originalOpen = window.open;
+
+
+
+
