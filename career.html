@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers at BillNeXX | Join Our Team</title>
+    <link rel="stylesheet" href="career.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Career Portal Header -->
+<header class="career-header">
+    <div class="container">
+        <nav class="career-nav">
+            <div class="career-logo">
+                <i class="fas fa-bolt logo-icon"></i>
+                <span>BillNeXX Careers</span>
+            </div>
+            <div class="career-nav-links">
+                <!-- Desktop View Buttons -->
+                <button id="profileBtn" class="btn btn-outline profile-btn desktop-btn" onclick="openModal('profileModal')">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Create Profile</span>
+                </button>
+                
+                <button class="btn btn-outline desktop-btn" onclick="openModal('trackingModal')">
+                    <i class="fas fa-tasks"></i> Track Application
+                </button>
+                
+                <a href="#" onclick="goToMainSite()" class="nav-link desktop-btn">
+                    <i class="fas fa-home"></i> Back to Main Site
+                </a>
+                
+                <!-- Mobile Hamburger Button - YEH LINE CHANGE KARO -->
+                <button class="hamburger-btn mobile-btn" id="careerHamburgerBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Mobile Menu Dropdown - YEH LINE CHANGE KARO -->
+    <div class="mobile-menu" id="careerMobileMenu">
+        <div class="mobile-menu-content">
+            <button class="mobile-menu-item" onclick="openModalFromMobile('profileModal')">
+                <i class="fas fa-user-plus"></i> Create Profile
+            </button>
+            <button class="mobile-menu-item" onclick="openModalFromMobile('trackingModal')">
+                <i class="fas fa-tasks"></i> Track Application
+            </button>
+            <a href="#" onclick="goToMainSite()" class="mobile-menu-item">
+                <i class="fas fa-home"></i> Back to Main Site
+            </a>
+        </div>
+    </div>
+</header>
+
+    <!-- Hero Section -->
+    <section class="career-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Build the Future of <span class="gradient-text">AI-Powered Billing</span></h1>
+                <p>Join BillNeXX and revolutionize how businesses create invoices with voice technology. We're hiring talented individuals who are passionate about innovation.</p>
+                
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Open Positions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Team Members</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                </div>
+                
+                <div class="hero-search">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="jobSearch" placeholder="Search jobs by title, skill, or keyword...">
+                        <button class="btn btn-primary" onclick="searchJobs()">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Filters -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label>Department</label>
+                    <select id="departmentFilter" onchange="filterJobs()">
+                        <option value="all">All Departments</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="design">Design</option>
+                        <option value="product">Product</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="sales">Sales</option>
+                        <option value="operations">Operations</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Job Type</label>
+                    <select id="typeFilter" onchange="filterJobs()">
+                        <option value="all">All Types</option>
+                        <option value="internship">Internship</option>
+                        <option value="fulltime">Full-time</option>
+                        <option value="contract">Contract</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Location</label>
+                    <select id="locationFilter" onchange="filterJobs()">
+                        <option value="all">All Locations</option>
+                        <option value="remote">Remote</option>
+                        <option value="bangalore">Bangalore</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="mumbai">Mumbai</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Experience</label>
+                    <select id="experienceFilter" onchange="filterJobs()">
+                        <option value="all">All Levels</option>
+                        <option value="intern">Intern</option>
+                        <option value="fresher">Fresher (0-2 yrs)</option>
+                        <option value="mid">Mid (2-5 yrs)</option>
+                        <option value="senior">Senior (5+ yrs)</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-outline" onclick="resetFilters()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jobs Listing -->
+    <section class="jobs-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Open Positions</h2>
+                <p>Discover opportunities that match your skills and passion</p>
+                <div class="results-count">
+                    Showing <span id="jobsCount">15</span> positions
+                </div>
+            </div>
+            
+            <div class="jobs-grid" id="jobsGrid">
+                <!-- Jobs will be populated by JavaScript -->
+            </div>
+            
+            <div class="load-more">
+                <button class="btn btn-outline" id="loadMoreBtn" onclick="loadMoreJobs()">
+                    <i class="fas fa-plus"></i> Load More Positions
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Tracking Modal -->
+    <div id="trackingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-tasks"></i> Track Your Application</h2>
+                <button class="modal-close" onclick="closeModal('trackingModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tracking-form">
+                    <div class="form-group">
+                        <label for="trackingEmail">Email Address</label>
+                        <input type="email" id="trackingEmail" placeholder="Enter your email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="trackingJobId">Job ID (Optional)</label>
+                        <input type="text" id="trackingJobId" placeholder="e.g., BNFE001">
+                    </div>
+                    <button class="btn btn-primary" onclick="trackApplication()">
+                        <i class="fas fa-search"></i> Track Application
+                    </button>
+                </div>
+                
+                <div id="trackingResults" class="tracking-results" style="display: none;">
+                    <h3>Application Status</h3>
+                    <div class="status-timeline">
+                        <div class="timeline-item active">
+                            <div class="timeline-marker">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Application Submitted</h4>
+                                <p>Your application has been received</p>
+                                <span class="timeline-date">March 15, 2024</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item active">
+                            <div class="timeline-marker">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Under Review</h4>
+                                <p>Your application is being reviewed by our team</p>
+                                <span class="timeline-date">March 18, 2024</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Interview</h4>
+                                <p>Technical interview scheduled</p>
+                                <span class="timeline-date">Pending</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Final Decision</h4>
+                                <p>Hiring decision will be communicated</p>
+                                <span class="timeline-date">Pending</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Application Modal -->
+    <div id="applicationModal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-briefcase"></i> Apply for <span id="modalJobTitle">Position</span></h2>
+                <button class="modal-close" onclick="closeModal('applicationModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="job-details-preview">
+                    <h3 id="previewJobTitle">Job Title</h3>
+                    <div class="job-meta">
+                        <span class="job-location"><i class="fas fa-map-marker-alt"></i> <span id="previewLocation">Location</span></span>
+                        <span class="job-type"><i class="fas fa-clock"></i> <span id="previewType">Type</span></span>
+                        <span class="job-department"><i class="fas fa-building"></i> <span id="previewDepartment">Department</span></span>
+                    </div>
+                </div>
+                
+                <form id="applicationForm" class="application-form">
+                    <input type="hidden" id="applyingJobId">
+                    <input type="hidden" id="applyingJobTitle">
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="applicantName">Full Name *</label>
+                                <input type="text" id="applicantName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="applicantEmail">Email Address *</label>
+                                <input type="email" id="applicantEmail" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="applicantPhone">Phone Number *</label>
+                                <input type="tel" id="applicantPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="applicantLocation">Current City *</label>
+                                <input type="text" id="applicantLocation" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Education & Experience</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="applicantEducation">Highest Education *</label>
+                                <select id="applicantEducation" required>
+                                    <option value="">Select Education</option>
+                                    <option value="btech">B.Tech/B.E.</option>
+                                    <option value="mtech">M.Tech/M.E.</option>
+                                    <option value="bca">BCA</option>
+                                    <option value="mca">MCA</option>
+                                    <option value="bsc">B.Sc</option>
+                                    <option value="msc">M.Sc</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="applicantCollege">College/University *</label>
+                                <input type="text" id="applicantCollege" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="applicantGraduation">Graduation Year *</label>
+                                <select id="applicantGraduation" required>
+                                    <option value="">Select Year</option>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="applicantExperience">Total Experience</label>
+                                <select id="applicantExperience">
+                                    <option value="0">Fresher</option>
+                                    <option value="1">1 year</option>
+                                    <option value="2">2 years</option>
+                                    <option value="3">3 years</option>
+                                    <option value="4">4 years</option>
+                                    <option value="5">5+ years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-paperclip"></i> Resume & Links</h3>
+                        <div class="form-group">
+                            <label for="applicantResume">Upload Resume (PDF, max 5MB) *</label>
+                            <div class="file-upload">
+                                <input type="file" id="applicantResume" accept=".pdf,.doc,.docx" required>
+                                <label for="applicantResume" class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Choose file</span>
+                                </label>
+                                <div class="file-name" id="resumeFileName">No file chosen</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="applicantLinkedIn">LinkedIn Profile</label>
+                                <input type="url" id="applicantLinkedIn" placeholder="https://linkedin.com/in/yourprofile">
+                            </div>
+                            <div class="form-group">
+                                <label for="applicantGitHub">GitHub Profile</label>
+                                <input type="url" id="applicantGitHub" placeholder="https://github.com/yourusername">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="applicantPortfolio">Portfolio Website (if any)</label>
+                            <input type="url" id="applicantPortfolio" placeholder="https://yourportfolio.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-edit"></i> Additional Information</h3>
+                        <div class="form-group">
+                            <label for="applicantCover">Cover Letter</label>
+                            <textarea id="applicantCover" rows="4" placeholder="Tell us why you're interested in this position and what makes you a great fit..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="applicantSource">How did you hear about us?</label>
+                            <select id="applicantSource">
+                                <option value="">Select Source</option>
+                                <option value="linkedin">LinkedIn</option>
+                                <option value="indeed">Indeed</option>
+                                <option value="naukri">Naukri.com</option>
+                                <option value="referral">Employee Referral</option>
+                                <option value="campus">Campus Placement</option>
+                                <option value="social">Social Media</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('applicationModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Creation Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Create Your Profile</h2>
+                <button class="modal-close" onclick="closeModal('profileModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm" class="profile-form">
+                    <div class="form-group">
+                        <label for="profileName">Full Name *</label>
+                        <input type="text" id="profileName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profileEmail">Email Address *</label>
+                        <input type="email" id="profileEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profilePhone">Phone Number *</label>
+                        <input type="tel" id="profilePhone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profileLocation">Current City</label>
+                        <input type="text" id="profileLocation" placeholder="Where are you based?">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profilePassword">Create Password *</label>
+                        <input type="password" id="profilePassword" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profileConfirmPassword">Confirm Password *</label>
+                        <input type="password" id="profileConfirmPassword" required>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input type="checkbox" id="profileNotifications" checked>
+                        <label for="profileNotifications">Send me job alerts and updates</label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeModal('profileModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Application Submitted Successfully!</h2>
+            <p>Thank you for applying to BillNeXX. We've sent a confirmation email to your inbox.</p>
+            <div class="success-details">
+                <div class="detail-item">
+                    <strong>Application ID:</strong> <span id="successAppId">BN-APP-001</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Position:</strong> <span id="successPosition">Frontend Developer Intern</span>
+                </div>
+            </div>
+            <div class="success-actions">
+                <button class="btn btn-outline" onclick="closeModal('successModal')">Browse More Jobs</button>
+                <button class="btn btn-primary" onclick="openTrackingModal()">Track Application</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Career Footer -->
+    <footer class="career-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-bolt logo-icon"></i>
+                        <span>BillNeXX Careers</span>
+                    </div>
+                    <p>Join us in building the future of AI-powered billing solutions for businesses worldwide.</p>
+                    <div class="footer-links">
+                        <a href="#" onclick="openTrackingModal()"><i class="fas fa-tasks"></i> Track Application</a>
+                        <a href="#" onclick="openModal('profileModal')"><i class="fas fa-user-plus"></i> Create Profile</a>
+                        <a href="mailto:careers@billnexx.com"><i class="fas fa-envelope"></i> careers@billnexx.com</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#engineering">Engineering Jobs</a></li>
+                        <li><a href="#design">Design Jobs</a></li>
+                        <li><a href="#internships">Internships</a></li>
+                        <li><a href="../index.html">Back to Main Site</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt"></i> HSR Layout, Bengaluru, India</p>
+                        <p><i class="fas fa-phone"></i> +91-7892393232</p>
+                        <p><i class="fas fa-envelope"></i> careers@billnexx.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 BillNeXX Careers. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="career.js"></script>
+</body>
+</html>
