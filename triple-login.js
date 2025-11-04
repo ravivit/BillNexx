@@ -475,39 +475,40 @@ function completeLogin() {
         redirectToProfile(user);
     }
 }
-
-// Redirect to Main Website
+// Redirect to Main Website (Clean Version)
 function redirectToProfile(user) {
-    // Store user session
+    // ✅ Store user session
     localStorage.setItem('current_user', JSON.stringify(user));
     localStorage.setItem('isLoggedIn', 'true');
-    
-    // Clear pending data
+
+    // 🧹 Clear pending data
     localStorage.removeItem('pendingOTP');
     localStorage.removeItem('pendingPhone');
     localStorage.removeItem('pendingUserData');
     localStorage.removeItem('otpTimestamp');
-    
-    // Send message to main window
+
+    // 🚀 Send message to main window if opened as popup
     if (window.opener && !window.opener.closed) {
         window.opener.postMessage({ 
             type: 'SIGNUP_SUCCESS', 
             user: user 
         }, '*');
         showNotification('Account created successfully! Closing window...', 'success');
-        
-        // Close popup after delay
+
+        // Close popup after short delay
         setTimeout(() => {
             window.close();
         }, 2000);
-    } else {
-        // If no opener, redirect to main site
+    } 
+    else {
+        // 🏠 If opened directly, redirect to same domain home page
         showNotification('Account created! Redirecting...', 'success');
         setTimeout(() => {
-            window.location.href = 'https://sparkinvoice.vercel.app';
+            window.location.href = '/';
         }, 2000);
     }
 }
+
 
 // Resend OTP
 function resendOTP() {
