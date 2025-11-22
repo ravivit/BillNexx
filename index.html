@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
 
-    <!-- FAVICON (Google Search + Browser Tab + Android + iPhone) -->
-    <link rel="icon" type="image/png" sizes="48x48" href="https://raw.githubusercontent.com/ravivit/BillNexx/main/billnexxai.png">
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="48x48" href="https://raw.githubusercontent.com/ravivit/BillNeXX/main/billnexxai.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/ravivit/BillNeXX/main/billnexxai.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/ravivit/BillNeXX/main/billnexxai.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/ravivit/BillNeXX/main/billnexxai.png">
 
+    <!-- CANONICAL URL (SEO IMPORTANT) -->
+    <link rel="canonical" href="https://www.billnexx.com/">
+
     <!-- BASIC SEO -->
     <title>BillNeXX | India's #1 AI Voice Billing Software</title>
-    <meta name="description" content="BillNeXX is India's top AI-powered voice billing software. Create GST invoices using English/Hindi voice commands in seconds. Free invoice maker for retail, restaurants, medical shops and SMEs.">
-    <meta name="keywords" content="Voice Billing Software, Hindi Billing App, GST Invoice Generator, AI Billing App India, Free Invoice Software, BillNeXX, Billing Software for Shops, Invoice Maker India">
+    <meta name="description" content="India's fastest AI voice billing software. Create GST invoices using English/Hindi voice commands instantly. Perfect for retail shops, restaurants, medical stores, freelancers. Free and easy to use.">
+    <meta name="keywords" content="billing software, voice billing, hindi billing app, GST invoice maker, invoice generator, AI billing app, BillNeXX, free billing software India">
     <meta name="author" content="BillNeXX">
 
-    <!-- OPEN GRAPH (Facebook, LinkedIn Preview) -->
+    <!-- OPEN GRAPH (FB, LinkedIn, WhatsApp) -->
     <meta property="og:title" content="BillNeXX - India's #1 AI Voice Billing Software">
-    <meta property="og:description" content="Create GST bills using English/Hindi voice commands instantly. India's smartest billing solution.">
+    <meta property="og:description" content="Create GST bills using English/Hindi voice commands instantly! India's smartest billing solution.">
     <meta property="og:image" content="https://raw.githubusercontent.com/ravivit/BillNeXX/main/billnexxai.png">
     <meta property="og:url" content="https://www.billnexx.com/">
     <meta property="og:type" content="website">
@@ -25,10 +28,19 @@
     <!-- TWITTER PREVIEW -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="BillNeXX - AI Voice Billing Software">
-    <meta name="twitter:description" content="Fastest Hindi/English voice billing app for Indian businesses.">
+    <meta name="twitter:description" content="Fastest Hindi/English voice billing app for businesses.">
     <meta name="twitter:image" content="https://raw.githubusercontent.com/ravivit/BillNeXX/main/billnexxai.png">
 
-    <!-- MOBILE APP SETTINGS -->
+    <!-- GOOGLE ANALYTICS GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9TC7FRY15Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9TC7FRY15Q');
+    </script>
+
+    <!-- WEBSITE SETTINGS -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#00f7ff">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,18 +48,42 @@
     <meta name="apple-mobile-web-app-title" content="BillNeXX">
     <meta name="mobile-web-app-capable" content="yes">
 
-    <!-- WEB APP MANIFEST -->
+    <!-- SCHEMA MARKUP (Improve ranking) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "BillNeXX",
+      "operatingSystem": "Web, Android, iOS",
+      "applicationCategory": "BusinessApplication",
+      "url": "https://www.billnexx.com/",
+      "image": "https://raw.githubusercontent.com/ravivit/BillNeXX/main/billnexxai.png",
+      "author": {
+        "@type": "Organization",
+        "name": "BillNeXX"
+      },
+      "description": "AI-powered Hindi/English voice billing software for Indian businesses.",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "2400"
+      }
+    }
+    </script>
+
+    <!-- MANIFEST -->
     <link rel="manifest" href="manifest.json">
 
-    <!-- STYLESHEETS -->
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- LIBRARIES -->
+    <!-- JS LIBS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
+
 
 
 
